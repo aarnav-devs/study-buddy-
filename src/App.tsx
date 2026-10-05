@@ -9,6 +9,7 @@ import { VoiceOverlay } from './components/VoiceOverlay';
 import { OnboardingModal } from './components/OnboardingModal';
 import { PRESET_TOPICS_CLIENT } from './data/presetTopics';
 import { LearningMode, ProgressItem, TopicData, UserPreferences } from './types';
+import { apiJson } from './lib/api';
 
 const INITIAL_PROGRESS: ProgressItem[] = [
   { id: '1', topic: 'Photosynthesis', emoji: '🌱', percent: 82, lastSubtopic: 'Chloroplast Thylakoids', lastUpdated: 'Today' },
@@ -29,7 +30,7 @@ export default function App() {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
   // API connection status
-  const [hasServerKey, setHasServerKey] = useState(true);
+  const [hasServerKey, setHasServerKey] = useState(false);
 
   // User & Progress State
   const [progressList, setProgressList] = useState<ProgressItem[]>(INITIAL_PROGRESS);
@@ -44,8 +45,7 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/status')
-      .then((r) => r.json())
+    apiJson<{ hasApiKey: boolean }>('/api/status')
       .then((d) => {
         if (d && typeof d.hasApiKey === 'boolean') {
           setHasServerKey(d.hasApiKey);
@@ -83,28 +83,33 @@ export default function App() {
     setCurrentTab('learn');
 
     try {
-      const res = await fetch('/api/study/explain', {
+      const data = await apiJson<{
+        success: boolean;
+        data?: TopicData;
+        needsApiKey?: boolean;
+        error?: string;
+      }>('/api/study/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: trimmed, isPreset: isPresetClick }),
       });
-      const data = await res.json();
 
       if (data.success && data.data) {
-        setTopicData(data.data);
-        setActiveTopic(data.data.topic);
+        const generatedData = data.data;
+        setTopicData(generatedData);
+        setActiveTopic(generatedData.topic);
 
         // Track in learning list
         setProgressList((prev) => {
-          const exists = prev.some((p) => p.topic.toLowerCase() === data.data.topic.toLowerCase());
+          const exists = prev.some((p) => p.topic.toLowerCase() === generatedData.topic.toLowerCase());
           if (!exists) {
             return [
               {
                 id: Date.now().toString(),
-                topic: data.data.topic,
-                emoji: data.data.emoji || '💡',
+                topic: generatedData.topic,
+                emoji: generatedData.emoji || '💡',
                 percent: 35,
-                lastSubtopic: data.data.headline?.slice(0, 30) || 'Started',
+                lastSubtopic: generatedData.headline?.slice(0, 30) || 'Started',
                 lastUpdated: 'Just now',
               },
               ...prev,
@@ -113,13 +118,13 @@ export default function App() {
           return prev;
         });
       } else if (data.needsApiKey) {
-        showToast('Gemini API key is missing. Add GEMINI_API_KEY to .env.local and restart the server.');
+        showToast('Gemini key is missing. Set GEMINI_API_KEY in Vercel environment variables and redeploy.');
       } else {
         showToast(data.error || 'Could not load AI explanation. Please try again.');
       }
     } catch (err: any) {
       console.warn('Failed to load topic from server:', err);
-      showToast('Network error connecting to Study Buddy AI.');
+      showToast(err instanceof Error ? err.message : 'Could not connect to Study Buddy AI.');
     } finally {
       setIsLoadingTopic(false);
     }

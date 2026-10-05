@@ -1,0 +1,22 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/status",
+      "destination": "/api/index?route=status"
+    },
+    {
+      "source": "/api/study/explain",
+      "destination": "/api/index?route=study/explain"
+    },
+    {
+      "source": "/api/study/verify",
+      "destination": "/api/index?route=study/verify"
+    },
+    {
+      "source": "/api/study/teach-step",
+      "destination": "/api/index?route=study/teach-step"
+    }
+  ]
+}

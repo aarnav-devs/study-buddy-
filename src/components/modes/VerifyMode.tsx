@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle2, AlertTriangle, Search, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
 import { VerifyResult } from '../../types';
+import { apiJson } from '../../lib/api';
 
 interface VerifyModeProps {
   topic: string;
@@ -16,40 +17,31 @@ const SAMPLE_STATEMENTS = [
 export const VerifyMode: React.FC<VerifyModeProps> = ({ topic }) => {
   const [statement, setStatement] = useState(SAMPLE_STATEMENTS[0]);
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<VerifyResult>({
-    verified: true,
-    confidence: 'High',
-    headline: 'Scientific Truth Verified',
-    summary: 'Yes! Plants perform cellular respiration 24 hours a day, taking in oxygen and emitting CO₂.',
-    explanation: 'While photosynthesis only happens when sunlight strikes leaves, plant cells must stay alive around the clock by metabolizing glucose with oxygen via cellular respiration, especially in the dark.',
-    socraticPrompt: 'How could you test this using a sealed jar and a CO₂ gas sensor over 24 hours?',
-  });
+  const [result, setResult] = useState<VerifyResult | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleVerify = async (textToVerify: string) => {
     if (!textToVerify.trim()) return;
     setIsLoading(true);
+    setErrorMessage('');
 
     try {
-      const res = await fetch('/api/study/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ statement: textToVerify }),
-      });
-      const data = await res.json();
+      const data = await apiJson<{ success: boolean; data?: VerifyResult; error?: string }>(
+        '/api/study/verify',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ statement: textToVerify }),
+        }
+      );
       if (data.success && data.data) {
         setResult(data.data);
+      } else {
+        setErrorMessage(data.error || 'Could not verify this statement. Please try again.');
       }
     } catch (e) {
       console.error('Verify failed:', e);
-      // Fallback
-      setResult({
-        verified: true,
-        confidence: 'High',
-        headline: 'Fact Verified',
-        summary: 'This statement aligns with established scientific understanding.',
-        explanation: 'Always cross-reference claims with primary textbooks and reproducible laboratory results.',
-        socraticPrompt: 'What real-world experiment would confirm this fact?',
-      });
+      setErrorMessage(e instanceof Error ? e.message : 'Could not connect to the AI service.');
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +105,11 @@ export const VerifyMode: React.FC<VerifyModeProps> = ({ topic }) => {
             </button>
           ))}
         </div>
+        {errorMessage && (
+          <p role="alert" className="mt-4 text-sm font-medium text-rose-700">
+            {errorMessage}
+          </p>
+        )}
       </div>
 
       {/* Result Card */}

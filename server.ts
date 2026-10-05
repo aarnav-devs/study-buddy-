@@ -12,7 +12,7 @@ dotenv.config({
   path: [path.resolve(__dirname, '.env.local'), path.resolve(__dirname, '.env')],
 });
 
-const app = express();
+export const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 app.use(express.json());
@@ -692,4 +692,6 @@ async function startServer() {
   });
 }
 
-startServer();
+if (process.env.VERCEL !== '1') {
+  startServer();
+}
