@@ -692,6 +692,6 @@ async function startServer() {
   });
 }
 
-if (process.env.VERCEL !== '1') {
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
   startServer();
 }

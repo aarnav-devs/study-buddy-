@@ -18,5 +18,13 @@ export default function handler(req: Request, res: Response) {
   query.searchParams.delete('route');
   req.url = `${API_ROUTES[route]}${query.search}`;
 
-  return app(req, res);
+  try {
+    return app(req, res);
+  } catch (error) {
+    console.error('Vercel API handler failed:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'The API server could not handle this request. Check the Vercel function logs.',
+    });
+  }
 }
