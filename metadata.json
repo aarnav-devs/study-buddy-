@@ -1,0 +1,6 @@
+{
+  "name": "Google Study Buddy",
+  "description": "A beautiful, student-friendly AI learning partner that helps you ask, understand, and think through 30-second sparks, visual models, and guided Socratic teaching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

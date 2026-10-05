@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <radialGradient id="faceGrad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stopColor="#ffffff" />
+      <stop offset="85%" stopColor="#f8fafc" />
+      <stop offset="100%" stopColor="#f1f5f9" />
+    </radialGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#3b82f6" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Blue Background Rounded Card -->
+  <rect width="512" height="512" rx="128" fill="#4f6bfc" />
+
+  <!-- Outer White Plate with Shadow -->
+  <circle cx="256" cy="256" r="216" fill="url(#faceGrad)" filter="url(#softShadow)" stroke="#e2e8f0" stroke-width="4" />
+
+  <!-- Colorful Dashed Perimeter Ring (Google colors) -->
+  <circle
+    cx="256"
+    cy="256"
+    r="196"
+    fill="none"
+    stroke="#22c55e"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-dasharray="14 18"
+    opacity="0.85"
+  />
+  <!-- Top/Right Yellow & Orange overlay -->
+  <path
+    d="M 256,60 A 196,196 0 0,1 452,256 A 196,196 0 0,1 360,420"
+    fill="none"
+    stroke="#f59e0b"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-dasharray="14 18"
+  />
+  <!-- Bottom Orange/Red overlay -->
+  <path
+    d="M 360,420 A 196,196 0 0,1 256,452 A 196,196 0 0,1 150,420"
+    fill="none"
+    stroke="#f97316"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-dasharray="14 18"
+  />
+  <!-- Left Green/Teal overlay -->
+  <path
+    d="M 150,420 A 196,196 0 0,1 60,256 A 196,196 0 0,1 256,60"
+    fill="none"
+    stroke="#10b981"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-dasharray="14 18"
+  />
+
+  <!-- Headphone Arc (Google Blue) -->
+  <path
+    d="M 160,210 C 160,110 352,110 352,210"
+    fill="none"
+    stroke="#3b82f6"
+    stroke-width="20"
+    stroke-linecap="round"
+  />
+
+  <!-- Top Yellow Center Jewel/Button -->
+  <circle cx="256" cy="115" r="16" fill="#facc15" stroke="#eab308" stroke-width="3" />
+
+  <!-- Left Earphone (Google Green) -->
+  <rect x="134" y="180" width="34" height="66" rx="17" fill="#22c55e" stroke="#16a34a" stroke-width="3" />
+
+  <!-- Right Earphone (Google Red) -->
+  <rect x="344" y="180" width="34" height="66" rx="17" fill="#ef4444" stroke="#dc2626" stroke-width="3" />
+
+  <!-- Left Eye -->
+  <circle cx="204" cy="246" r="22" fill="#1e293b" />
+  <circle cx="210" cy="240" r="7" fill="#ffffff" />
+  <circle cx="199" cy="251" r="3" fill="#ffffff" />
+
+  <!-- Right Eye -->
+  <circle cx="308" cy="246" r="22" fill="#1e293b" />
+  <circle cx="314" cy="240" r="7" fill="#ffffff" />
+  <circle cx="303" cy="251" r="3" fill="#ffffff" />
+
+  <!-- Rosy Pink Cheeks -->
+  <ellipse cx="178" cy="286" rx="20" ry="17" fill="#fca5a5" opacity="0.85" />
+  <ellipse cx="334" cy="286" rx="20" ry="17" fill="#fca5a5" opacity="0.85" />
+
+  <!-- Sweet Happy Curved Smile -->
+  <path
+    d="M 224,282 Q 256,310 288,282"
+    fill="none"
+    stroke="#1e293b"
+    stroke-width="12"
+    stroke-linecap="round"
+  />
+</svg>
